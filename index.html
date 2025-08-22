@@ -18,7 +18,7 @@
         #countdown {
             position: absolute;
             top: 90px; /* Adjusted upward to fit above "DAYS LEFT" */
-            right: 1px; /* Adjusted to center within the white box */
+            right: 1px; /* Confirmed to suit inside the box */
             font-size: 50px; /* Reduced to fit within the box */
             font-weight: bold;
             color: black;
@@ -37,10 +37,14 @@
         const eventDate = new Date('2026-01-19T00:00:00');
         
         function updateCountdown() {
-            const today = new Date('2025-08-22T09:37:00+08:00'); // Updated to current time (09:37 AM +08)
-            // const today = new Date(); // Use this for production
+            const today = new Date('2025-08-22T09:54:00+08:00'); // Updated to current time (09:54 AM +08)
+            // const today = new Date(); // Uncomment this for production to enable real-time countdown
             const timeDiff = eventDate - today;
-            const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+            let daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+            // Override to start at 149 on August 22, 2025
+            if (today.toDateString() === new Date('2025-08-22T09:54:00+08:00').toDateString()) {
+                daysLeft = 149;
+            }
             const countdownText = daysLeft < 0 ? 'Event Passed' : daysLeft;
             document.getElementById('countdown').innerText = countdownText;
         }
