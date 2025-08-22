@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAHSA Hospital Countdown Wallpaper</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: url('mahsa-hospital.jpg') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+        }
+        #countdown {
+            position: absolute;
+            top: 90px; /* Adjusted upward to fit above "DAYS LEFT" */
+            right: 1px; /* Adjusted to center within the white box */
+            font-size: 50px; /* Reduced to fit within the box */
+            font-weight: bold;
+            color: black;
+            text-align: center;
+            width: 180px; /* Reduced to match the box width */
+            height: 80px; /* Added to constrain vertical space */
+            line-height: 80px; /* Vertically center the text */
+            pointer-events: none; /* Prevent interaction with the text */
+        }
+    </style>
+</head>
+<body>
+    <div id="countdown"></div>
+    <script>
+        // Target date (January 19, 2026, based on the image)
+        const eventDate = new Date('2026-01-19T00:00:00');
+        
+        function updateCountdown() {
+            const today = new Date('2025-08-22T09:37:00+08:00'); // Updated to current time (09:37 AM +08)
+            // const today = new Date(); // Use this for production
+            const timeDiff = eventDate - today;
+            const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+            const countdownText = daysLeft < 0 ? 'Event Passed' : daysLeft;
+            document.getElementById('countdown').innerText = countdownText;
+        }
+        
+        // Update immediately and every 24 hours (86400000 ms)
+        updateCountdown();
+        setInterval(updateCountdown, 86400000);
+    </script>
+</body>
+</html>
