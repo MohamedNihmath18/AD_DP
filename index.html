@@ -1,57 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAHSA Hospital Countdown Wallpaper</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            background: url('mahsa-hospital.jpg') no-repeat center center fixed;
-            background-size: cover;
-            position: relative;
-        }
-        #countdown {
-            position: absolute;
-            top: 90px; /* Adjusted upward to fit above "DAYS LEFT" */
-            right: 1px; /* Confirmed to suit inside the box */
-            font-size: 50px; /* Reduced to fit within the box */
-            font-weight: bold;
-            color: black;
-            text-align: center;
-            width: 180px; /* Reduced to match the box width */
-            height: 80px; /* Added to constrain vertical space */
-            line-height: 80px; /* Vertically center the text */
-            pointer-events: none; /* Prevent interaction with the text */
-        }
-    </style>
+<meta charset="utf-8" />
+<title>Responsive Countdown Wallpaper</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  html, body { margin:0; height:100%; overflow:hidden; background:#000; }
+  #root { position:fixed; inset:0; overflow:hidden; }
+
+  #bg {
+    position:absolute; 
+    left:0; top:0; 
+    width:100%; height:100%; 
+    object-fit:cover; /* behaves like wallpaper */
+  }
+
+  #countdown {
+    position:absolute;
+    transform:translate(-50%, -50%);
+    font-family: Arial, sans-serif;
+    font-weight:700;
+    color:#000; /* adjust to white if needed */
+    text-align:center;
+    line-height:1;
+    white-space:nowrap;
+    pointer-events:none;
+    text-shadow: 0 2px 4px rgba(255,255,255,.4);
+  }
+</style>
 </head>
 <body>
+  <div id="root">
+    <img id="bg" src="mahsa-hospital.jpg" alt="">
     <div id="countdown"></div>
-    <script>
-        // Target date (January 19, 2026, based on the image)
-        const eventDate = new Date('2026-01-19T00:00:00');
-        
-        function updateCountdown() {
-            const today = new Date('2025-08-22T09:54:00+08:00'); // Updated to current time (09:54 AM +08)
-            // const today = new Date(); // Uncomment this for production to enable real-time countdown
-            const timeDiff = eventDate - today;
-            let daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-            // Override to start at 149 on August 22, 2025
-            if (today.toDateString() === new Date('2025-08-22T09:54:00+08:00').toDateString()) {
-                daysLeft = 149;
-            }
-            const countdownText = daysLeft < 0 ? 'Event Passed' : daysLeft;
-            document.getElementById('countdown').innerText = countdownText;
-        }
-        
-        // Update immediately and every 24 hours (86400000 ms)
-        updateCountdown();
-        setInterval(updateCountdown, 86400000);
-    </script>
+  </div>
+
+<script>
+// --- CONFIGURATION ---
+// Original wallpaper dimensions:
+const IMG_W = 1920;
+const IMG_H = 1080;
+
+// Anchor point (from your details)
+const ANCHOR_X = 1435; // px in original image
+const ANCHOR_Y = 150;  // px in original image
+
+// Base font size that looks correct at original 1920x1080
+const BASE_FONT_PX = 70;
+
+// Countdown target
+const TARGET_DATE = new Date('2026-01-18T00:00:00');
+
+const bg = document.getElementById('bg');
+const num = document.getElementById('countdown');
+
+// Countdown logic
+function updateCountdown() {
+  const today = new Date();
+  const midnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const diffDays = Math.ceil((TARGET_DATE - midnight) / (1000*60*60*24));
+  num.textContent = diffDays > 0 ? diffDays : 0;
+}
+
+// Layout logic
+function layout() {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+
+  // Scale factor for "cover" mode
+  const scale = Math.max(vw / IMG_W, vh / IMG_H);
+  const dw = IMG_W * scale;
+  const dh = IMG_H * scale;
+  const dx = (vw - dw) / 2;
+  const dy = (vh - dh) / 2;
+
+  // Apply same sizing to background <img>
+  bg.style.width  = dw + "px";
+  bg.style.height = dh + "px";
+  bg.style.left   = dx + "px";
+  bg.style.top    = dy + "px";
+
+  // Compute overlay position
+  const x = dx + ANCHOR_X * scale;
+  const y = dy + ANCHOR_Y * scale;
+
+  num.style.left     = x + "px";
+  num.style.top      = y + "px";
+  num.style.fontSize = (BASE_FONT_PX * scale) + "px";
+}
+
+bg.addEventListener("load", () => { layout(); updateCountdown(); });
+window.addEventListener("resize", layout);
+window.addEventListener("orientationchange", layout);
+
+// Update countdown every hour
+setInterval(updateCountdown, 60*60*1000);
+</script>
 </body>
 </html>
